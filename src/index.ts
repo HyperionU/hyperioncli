@@ -4,7 +4,7 @@ import chalk from "chalk";
 import { Command } from "commander";
 import { version } from "../package.json";
 import { init } from "./command/init.js";
-
+import { nitrox } from "./command/nitrox";
 
 const program = new Command()
     .name("hyperioncli")
@@ -13,5 +13,6 @@ const program = new Command()
 
 program
     .addCommand(init)
+    .addCommand(nitrox)
 
 program.parse()
