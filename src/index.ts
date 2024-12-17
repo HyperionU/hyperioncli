@@ -5,6 +5,7 @@ import { Command } from "commander";
 import { version } from "../package.json";
 import { init } from "./command/init.js";
 import { nitrox } from "./command/nitrox";
+import { turbo } from "./command/turbo";
 
 const program = new Command()
     .name("hyperioncli")
@@ -14,5 +15,6 @@ const program = new Command()
 program
     .addCommand(init)
     .addCommand(nitrox)
+    .addCommand(turbo)
 
 program.parse()
