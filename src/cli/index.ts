@@ -5,7 +5,7 @@ import { installPackages } from "~/installers/installPackage.js";
 import { setTimeout } from "timers/promises";
 import { packagePrompt, install, configPrompt} from "~/utils/prompts.js";
 import { PackageManager } from "~/utils/getPackageManager.js";
-import { turboCLI } from "./turbo.js";
+import { turboPrompt } from "./turbo.js";
 import { nitroxPrompt } from "./nitrox.js";
 import { Task, tasks } from "~/utils/task.js";
 import { intro } from "~/utils/prompts/intro.js";
@@ -35,7 +35,7 @@ export const runCLI = async (packageManager: PackageManager, flags: cliFlags): P
     }
 
     await intro();
-    prompt.note("Let's get you configured.", gradient.atlas("Step 1:"))
+    prompt.note("Let's get you configured.", gradient.atlas("Step 1."))
 
     const config = await configPrompt(packageManager, cliResults.flags)
     
@@ -82,7 +82,7 @@ export const runCLI = async (packageManager: PackageManager, flags: cliFlags): P
 
     if (cliResults.flags.turbo) {
         await setTimeout(1000)
-        await turboCLI(packageManager)
+        await turboPrompt(packageManager)
     }
 
     if (cliResults.flags.nitrox) {
