@@ -10,8 +10,9 @@
     "start": "node dist/index.js",
     "start:help": "node dist/index.js -h",
     "start:version": "node dist/index.js -V",
-    "start:nitrox": "node dist/index.js --ntrx",
-    "start:turbo": "node dist/index.js --turbo",
+    "start:nitrox": "node dist/index.js init --ntrx",
+    "start:turbo": "node dist/index.js init --turbo",
+    "start:init": "node dist/index.js init",
     "clean": "rm -rf dist",
     "clean:turbo": "rm -rf dist && pnpm remove -g turbo",
     "quickbuild": "tsc && tsup"
