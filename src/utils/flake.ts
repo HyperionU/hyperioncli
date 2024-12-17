@@ -1,5 +1,5 @@
 import Ajv from "ajv";
-import * as schema from "../../flake.schema.json"
+import * as schema from "~/utils/flake.schema.json"
 
 const ajv = new Ajv();
 
