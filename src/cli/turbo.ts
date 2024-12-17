@@ -4,7 +4,7 @@ import * as prompt from "@clack/prompts"
 import gradient from "gradient-string";
 import { setTimeout } from "timers/promises";
 import { isEmpty } from "~/utils/checkDir.js";
-import { cancelPrompt } from "~/utils/cancel.js";
+import { cancelPrompt } from "~/utils/prompts/cancel.js";
 
 export const turboCLI = async (packageManager:PackageManager) => {
     switch (packageManager) {

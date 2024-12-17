@@ -2,7 +2,7 @@ import * as prompt from "@clack/prompts";
 import { setTimeout } from "timers/promises";
 import type { cliFlags, Packages } from "~/installers/index.js"
 import { PackageManager } from "./getPackageManager.js";
-import { cancelPrompt } from "./cancel.js";
+import { cancelPrompt } from "./prompts/cancel.js";
 import { exit } from "process";
 
 export const configPrompt = async (packageManager: PackageManager, flags: cliFlags) => {
