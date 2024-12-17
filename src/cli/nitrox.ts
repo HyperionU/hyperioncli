@@ -11,6 +11,26 @@ export const nitroxCLI = async (packageManager: PackageManager, flags: cliFlags)
     prompt.note(`Welcome to ${gradient.atlas("Nitrox")}. \nLet's get you up and running.`, `${flags.turbo ? "Step 3a." : "Step 2a."}`);
     await setTimeout(1000);
 
+    const config = await nitroxStandardConfig()
+
+    prompt.note("Now, let's add some integrations.", `${flags.turbo ? "Step 3b." : "Step 2b."}`)
+    await setTimeout(1000)
+
+    const integrations = await nitroxIntegrationConfig()
+
+    switch (packageManager) {
+        case "npm":
+            await execa({stdout: 'inherit', stderr: 'inherit'})`${packageManager} create astro ${config.route} -- --template minimal --typescript ${config.typescript} ${config.runInstall ? "--install" : "--no-install"} ${config.initGit ? "--git" : "--no-git"} --add ${integrations.join(' ')}`
+            break;
+    
+        default:
+            await execa({stdout: 'inherit', stderr: 'inherit'})`${packageManager} create astro ${config.route} --template minimal --typescript ${config.typescript} ${config.runInstall ? "--install" : "--no-install"} ${config.initGit ? "--git" : "--no-git"} --add ${integrations.join(' ')}`
+            break;
+    }
+
+}
+
+const nitroxStandardConfig = async () => {
     const config = await prompt.group({
         route: () => prompt.text({
             message: "What is the path to your new site?",
@@ -46,10 +66,10 @@ export const nitroxCLI = async (packageManager: PackageManager, flags: cliFlags)
             process.exit(1)
         }
     });
+    return config
+}
 
-    prompt.note("Now, let's add some integrations.", `${flags.turbo ? "Step 3b." : "Step 2b."}`)
-    await setTimeout(1000)
-
+const nitroxIntegrationConfig = async () => {
     const integrationConfig = await prompt.group({
         uiInt: () => prompt.multiselect({
             message: "Which UI integrations do you want to add?",
@@ -95,20 +115,10 @@ export const nitroxCLI = async (packageManager: PackageManager, flags: cliFlags)
             process.exit(1)
         }
     });
-
+    
     const integrations = [];
     integrations.push(integrationConfig.uiInt, integrationConfig.otherInt);
     integrationConfig.ssrAdapter !== "none" && integrations.push(integrationConfig.ssrAdapter);
 
-
-    switch (packageManager) {
-        case "npm":
-            await execa({stdout: 'inherit', stderr: 'inherit'})`${packageManager} create astro ${config.route} -- --template minimal --typescript ${config.typescript} ${config.runInstall ? "--install" : "--no-install"} ${config.initGit ? "--git" : "--no-git"} --add ${integrations.join(' ')}`
-            break;
-    
-        default:
-            await execa({stdout: 'inherit', stderr: 'inherit'})`${packageManager} create astro ${config.route} --template minimal --typescript ${config.typescript} ${config.runInstall ? "--install" : "--no-install"} ${config.initGit ? "--git" : "--no-git"} --add ${integrations.join(' ')}`
-            break;
-    }
-
+    return integrations;
 }
