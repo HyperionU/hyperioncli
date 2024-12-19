@@ -4,11 +4,14 @@ import { Flake } from "~/installers";
 
 const ajv = new Ajv()
 
-const validate = ajv.compile(schema)
+const validate = ajv.compile<Flake>(schema)
 
 export const flakeValidate = async (flake: Flake) => {
     const valid = validate(flake)
     
-    if (!valid) console.error(validate.errors)
-    else console.log("Data Valid")
+    if (!valid) {
+        console.error(validate.errors)
+    }
+
+    return valid;
 }
