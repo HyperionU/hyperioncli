@@ -49,6 +49,9 @@
                     "type": "string"
                 }
             },
+            "required": [
+                "enable"
+            ],
             "if": {
                 "properties": {
                     "enable": {
@@ -92,6 +95,9 @@
                     }
                 }
             },
+            "required": [
+                "enable"
+            ],
             "if": {
                 "properties": {
                     "enable": {

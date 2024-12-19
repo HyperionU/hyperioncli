@@ -1,0 +1,14 @@
+{
+    "$schema": "https://raw.githubusercontent.com/HyperionU/hyperioncli/refs/heads/exp-Flake/src/utils/flake.schema.json",
+    "description": "Example flake for hyperioncli",
+    "packageManager": "pnpm",
+    "packageSet": {
+        "value": "sslim"
+    },
+    "turbo": {
+        "enable": false
+    },
+    "nitrox": {
+        "enable": false
+    }
+}

@@ -1,3 +1,5 @@
+import { PackageManager } from "~/utils/getPackageManager";
+
 export const packages = {
     /* Theme */
     "vsIcons": "vscode-icons-team.vscode-icons",
@@ -29,4 +31,26 @@ export interface cliFlags {
 export interface cliResults {
     flags: cliFlags,
     packages: Packages[],
+}
+
+export interface Flake{
+    description: string
+    packageManager: PackageManager
+    packageSet: {
+        value: "std" | "slim" | "sslim" | "custom" 
+        packages?: Packages[] 
+    }        
+    turbo: {
+        enable: boolean
+        path?: string
+    }
+    nitrox: {
+        enable: boolean
+        path?: string
+        typescript?: "strict" | "strictest" |"relaxed"
+        runInstall?: boolean
+        initGit?: boolean
+        integrations?: string[]
+           
+    }
 }

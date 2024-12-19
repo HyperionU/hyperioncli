@@ -1,17 +1,14 @@
 import Ajv from "ajv";
-import * as schema from "~/utils/flake.schema.json"
+import * as schema from "./flake.schema.json"
+import { Flake } from "~/installers";
 
-const ajv = new Ajv();
+const ajv = new Ajv()
 
-const validate = ajv.compile(schema);
+const validate = ajv.compile(schema)
 
-export const flakeValidate = (data: any) => {
-
-    const valid = validate(data);
-
-    if (!valid) {
-        return console.error(validate.errors)
-    }
+export const flakeValidate = async (flake: Flake) => {
+    const valid = validate(flake)
     
-    return console.log("Data Valid!")
+    if (!valid) console.error(validate.errors)
+    else console.log("Data Valid")
 }
