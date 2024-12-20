@@ -19,17 +19,17 @@ export const nitroxPrompt = async (packageManager: PackageManager, flags: cliFla
 
     const integrations = await nitroxIntegrationConfig()
 
-    await runNitroxInit(packageManager, config, integrations);
+    await runNitroxInit(packageManager, config, integrations, true);
 }
 
-export async function runNitroxInit(packageManager: string, config: { route: string; typescript: string; runInstall: boolean; initGit: boolean; }, integrations: (string | string[])[]) {
+export async function runNitroxInit(packageManager: string, config: { route: string; typescript: string; runInstall: boolean; initGit: boolean; }, integrations: (string | string[])[], outFlag: boolean) {
     switch (packageManager) {
         case "npm":
-            await execa({ stdout: 'inherit', stderr: 'inherit' })`${packageManager} create astro ${config.route} -- --template minimal --typescript ${config.typescript} ${config.runInstall ? "--install" : "--no-install"} ${config.initGit ? "--git" : "--no-git"} --add ${integrations.join(' ')}`;
+            await execa({ stdout: `${outFlag ? 'inherit' : 'ignore'}`, stderr: `${outFlag ? 'inherit' : 'ignore'}` })`${packageManager} create astro ${config.route} -- --template minimal --typescript ${config.typescript} ${config.runInstall ? "--install" : "--no-install"} ${config.initGit ? "--git" : "--no-git"} --add ${integrations.join(' ')}`;
             break;
 
         default:
-            await execa({ stdout: 'inherit', stderr: 'inherit' })`${packageManager} create astro ${config.route} --template minimal --typescript ${config.typescript} ${config.runInstall ? "--install" : "--no-install"} ${config.initGit ? "--git" : "--no-git"} --add ${integrations.join(' ')}`;
+            await execa({ stdout: `${outFlag ? 'inherit' : 'ignore'}`, stderr: `${outFlag ? 'inherit' : 'ignore'}` })`${packageManager} create astro ${config.route} --template minimal --typescript ${config.typescript} ${config.runInstall ? "--install" : "--no-install"} ${config.initGit ? "--git" : "--no-git"} --add ${integrations.join(' ')}`;
             break;
     }
 }

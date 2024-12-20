@@ -79,7 +79,8 @@ const flakeCLI = async (flake:Flake) => {
         {
             title: "Initialising Nitrox",
             async task() {
-                await runNitroxInit(packageManager, nitroxConfig, nitroxIntegrations)
+                await runNitroxInit(packageManager, nitroxConfig, nitroxIntegrations, false)
+                return `${gradient.atlas("Nitrox")} initialised.`
             },
             enabled: enableNitrox
         }
