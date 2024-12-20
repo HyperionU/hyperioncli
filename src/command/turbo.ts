@@ -15,18 +15,18 @@ export const turbo = new Command()
     .action(async (option) => {
         const packageManager = getUserPkgManager();
         if (option.path === null) {await turboCLI(packageManager)}
-        else {await initTurborepo(packageManager, option.path)}
+        else {await initTurborepo(packageManager, option.path, true)}
     })
 
 const turboCLI = async (packageManager:PackageManager) => {
     await intro()
-    await installTurboCommand(packageManager);
+    await installTurboCommand(packageManager, true);
 
     note(`Welcome to ${gradient.passion("Turbo")}. Let's get started.`, "Step 1.");
     await setTimeout(1000);
 
     const turboPath = await turboConfig();
 
-    await initTurborepo(packageManager, turboPath);
+    await initTurborepo(packageManager, turboPath, true);
     await outro()
 }

@@ -71,7 +71,7 @@ const flakeCLI = async (flake:Flake) => {
         {
             title: "Initialising Turborepo",
             async task() {
-                await initTurborepo(packageManager, turboPath)
+                await initTurborepo(packageManager, turboPath, false)
                 return `${gradient.passion("Turbo")} running.`
             },
             enabled: enableTurbo
