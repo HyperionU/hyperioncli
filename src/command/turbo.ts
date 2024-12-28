@@ -13,7 +13,7 @@ export const turbo = new Command()
     .description('initialize and scaffold new Turborepo')
     .option("-p, --path <path>", 'Path to new Turborepo')
     .action(async (option) => {
-        const packageManager = getUserPkgManager();
+        const packageManager = await getUserPkgManager();
         if (option.path === null) {await turboCLI(packageManager)}
         else {await initTurborepo(packageManager, option.path, true)}
     })
