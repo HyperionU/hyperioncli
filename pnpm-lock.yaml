@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@antfu/ni':
+        specifier: ^0.23.2
+        version: 0.23.2
       '@clack/prompts':
         specifier: ^0.7.0
         version: 0.7.0
@@ -44,6 +47,10 @@ importers:
         version: 5.4.5
 
 packages:
+
+  '@antfu/ni@0.23.2':
+    resolution: {integrity: sha512-FSEVWXvwroExDXUu8qV6Wqp2X3D1nJ0Li4LFymCyvCVrm7I3lNfG0zZWSWvGU1RE7891eTnFTyh31L3igOwNKQ==}
+    hasBin: true
 
   '@clack/core@0.3.4':
     resolution: {integrity: sha512-H4hxZDXgHtWTwV3RAVenqcC4VbJZNegbBjlPvzOzCouXtS2y3sDvlO3IsbrPNWuLWPPlYVYPghQdSF64683Ldw==}
@@ -864,6 +871,8 @@ packages:
     engines: {node: '>=18'}
 
 snapshots:
+
+  '@antfu/ni@0.23.2': {}
 
   '@clack/core@0.3.4':
     dependencies:

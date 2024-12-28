@@ -14,7 +14,7 @@ export const nitrox = new Command()
     .description("Initialise and scaffold a new Nitrox project")
     .action(
         async () => {
-            const packageManager = getUserPkgManager()
+            const packageManager = await getUserPkgManager()
             await nitroxCLI(packageManager)
         }
     )
