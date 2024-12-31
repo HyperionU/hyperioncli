@@ -1,4 +1,3 @@
-import * as prompt from "@clack/prompts";
 import { cliFlags, cliResults, Packages } from "~/installers/index.js";
 import gradient from "gradient-string";
 import { installPackages } from "~/installers/installPackage.js";
@@ -10,6 +9,7 @@ import { nitroxPrompt } from "./nitrox.js";
 import { Task, tasks } from "~/utils/task.js";
 import { intro } from "~/utils/prompts/intro.js";
 import { outro } from "~/utils/prompts/outro.js";
+import { note } from "@clack/prompts";
 
 const defaultOptions: cliResults = {
     flags: {
@@ -35,7 +35,7 @@ export const runCLI = async (packageManager: PackageManager, flags: cliFlags): P
     }
 
     await intro();
-    prompt.note("Let's get you configured.", gradient.atlas("Step 1."))
+    note("Let's get you configured.", gradient.atlas("Step 1."))
 
     const config = await configPrompt(packageManager, cliResults.flags)
     
