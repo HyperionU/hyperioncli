@@ -1,15 +1,15 @@
-import * as prompt from "@clack/prompts";
 import { setTimeout } from "timers/promises";
 import type { cliFlags, Packages } from "~/installers/index.js"
 import { PackageManager } from "./getPackageManager.js";
 import { cancelPrompt } from "./prompts/cancel.js";
 import { exit } from "process";
+import { confirm, log, multiselect, select } from "@clack/prompts";
 
 export const configPrompt = async (packageManager: PackageManager, flags: cliFlags) => {
     
     await setTimeout(1000)
 
-    const checkPM = await prompt.confirm({
+    const checkPM = await confirm({
         message: `Are you running ${packageManager}?`
     }) as boolean;
     
@@ -17,21 +17,21 @@ export const configPrompt = async (packageManager: PackageManager, flags: cliFla
 
     cancelPrompt(checkPM)
 
-    prompt.log.message("Got it! Noted.");
+    log.message("Got it! Noted.");
 
     await setTimeout(1000)
 
     const config = flags
 
     if (!flags.nitrox) {
-        const runNitrox = await prompt.confirm({
+        const runNitrox = await confirm({
             message: "Do you want to start the new Nitrox DevKit?",
         }) as boolean;
         cancelPrompt(runNitrox)
         config.nitrox = runNitrox;
     }
     if (!flags.turbo) {
-        const runTurbo = await prompt.confirm({
+        const runTurbo = await confirm({
             message: "Do you want to start Turbo?",
         }) as boolean;
         cancelPrompt(runTurbo)
@@ -42,7 +42,7 @@ export const configPrompt = async (packageManager: PackageManager, flags: cliFla
 }
 
 export const themePrompt = async (): Promise<Packages> => {
-    const theme = await prompt.select({
+    const theme = await select({
         message: "What theme do you want to install?",
         options: [
             {value: "night", label: "Tokyo Night"},
@@ -53,7 +53,7 @@ export const themePrompt = async (): Promise<Packages> => {
 }
 
 export const packagePrompt = async () => {
-    const packages = await prompt.select({
+    const packages = await select({
         message: "Which set would you like to install?",
         options: [
             {value: "std", label: "Standard"},
@@ -113,7 +113,7 @@ export const install = async (packageSet: string): Promise<Packages[]> => {
             pack.push(await themePrompt())
             break;
         case "custom":
-            const customPack = await prompt.multiselect({
+            const customPack = await multiselect({
                 message: "Which packages would you like to install?",
                 options: [
                     {value: "vsIcons", label: "VSCode Icons"},

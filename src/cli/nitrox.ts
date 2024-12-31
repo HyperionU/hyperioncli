@@ -1,20 +1,20 @@
 import { execa } from "execa";
 import { PackageManager } from "~/utils/getPackageManager.js";
-import * as prompt from "@clack/prompts"
 import gradient from "gradient-string";
 import { setTimeout } from "timers/promises";
 import { cliFlags } from "~/installers/index.js";
 import { nitroxStandardConfig } from "~/utils/prompts/nitrox/stdConfig";
 import { nitroxIntegrationConfig } from "~/utils/prompts/nitrox/integrationConfig";
+import { note } from "@clack/prompts";
 
 export const nitroxPrompt = async (packageManager: PackageManager, flags: cliFlags) => {
 
-    prompt.note(`Welcome to ${gradient.atlas("Nitrox")}. \nLet's get you up and running.`, `${flags.turbo ? "Step 3a." : "Step 2a."}`);
+    note(`Welcome to ${gradient.atlas("Nitrox")}. \nLet's get you up and running.`, `${flags.turbo ? "Step 3a." : "Step 2a."}`);
     await setTimeout(1000);
 
     const config = await nitroxStandardConfig()
 
-    prompt.note("Now, let's add some integrations.", `${flags.turbo ? "Step 3b." : "Step 2b."}`)
+    note("Now, let's add some integrations.", `${flags.turbo ? "Step 3b." : "Step 2b."}`)
     await setTimeout(1000)
 
     const integrations = await nitroxIntegrationConfig()

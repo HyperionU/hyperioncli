@@ -1,10 +1,10 @@
-import * as prompt from "@clack/prompts";
+import { text } from "@clack/prompts";
 import { isEmpty } from "~/utils/checkDir";
 import { cancelPrompt } from "~/utils/prompts/cancel";
 
 export const turboConfig = async () => {
 
-    const turbo = await prompt.text({
+    const turbo = await text({
         message: "What is the path to your new turborepo?",
         placeholder: "./turbo",
         validate: (value) => {
