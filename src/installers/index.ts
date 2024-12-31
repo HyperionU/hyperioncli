@@ -33,7 +33,7 @@ export interface cliResults {
     packages: Packages[],
 }
 
-export interface Flake{
+export interface Flake {
     description: string
     packageManager: PackageManager
     packageSet: {
@@ -44,13 +44,14 @@ export interface Flake{
         enable: boolean
         path?: string
     }
-    nitrox: {
-        enable: boolean
-        path?: string
-        typescript?: "strict" | "strictest" |"relaxed"
-        runInstall?: boolean
-        initGit?: boolean
-        integrations?: string[]
-           
-    }
+    nitrox: NitroxConfig
+}
+
+type NitroxConfig = {
+    enable: boolean
+    path?: string
+    typescript?: "strict" | "strictest" | "relaxed"
+    runInstall?: boolean
+    initGit?: boolean
+    integrations?: string[]
 }
