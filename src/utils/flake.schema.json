@@ -13,114 +13,122 @@
                 "yarn"
             ]
         },
-        "packageSet": {
+        "services": {
             "type": "object",
             "properties": {
-                "value": {
-                    "enum": ["std", "slim", "sslim", "custom" ]
-                },
-                "packages": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                }
-            },
-            "if": {
-                "properties": {
-                    "value": {"const": "custom"}
-                }
-            },
-            "then": {
-                "required": ["packages"]
-            },
-            "required": [
-                "value"
-            ]
-        },
-        "turbo": {
-            "type": "object",
-            "properties": {
-                "enable": {
-                    "type": "boolean",
-                    "default": false
-                },
-                "path": {
-                    "type": "string"
-                }
-            },
-            "required": [
-                "enable"
-            ],
-            "if": {
-                "properties": {
-                    "enable": {
-                        "const": true
-                    }
-                }
-            },
-            "then": {
-                "required": [
-                    "path"
-                ]
-            }
-        },
-        "nitrox": {
-            "type": "object",
-            "properties": {
-                "enable": {
-                    "type": "boolean",
-                    "default": false
-                },
-                "path": {
-                    "type": "string"
-                },
-                "typescript": {
-                    "enum": [
-                        "strict",
-                        "strictest",
-                        "relaxed"
-                    ]
-                },
-                "runInstall": {
+                "packageSet": {
                     "type": "boolean"
                 },
-                "initGit": {
+                "turbo": {
                     "type": "boolean"
                 },
-                "integrations": {
+                "nitrox": {
+                    "type": "boolean"
+                },
+                "shadcn": {
+                    "type": "boolean"
+                }
+            },
+            "additionalProperties": false
+        },
+        "options": {
+            "type": "object",
+            "properties": {
+                "packageSet": {
+                    "type": "object",
+                    "properties": {
+                        "value": {
+                            "enum": [
+                                "std",
+                                "slim",
+                                "sslim",
+                                "custom"
+                            ]
+                        },
+                        "packages": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "if": {
+                        "properties": {
+                            "value": {
+                                "const": "custom"
+                            }
+                        }
+                    },
+                    "then": {
+                        "required": [
+                            "packages"
+                        ]
+                    }
+                },
+                "turboPath": {
+                    "type": "string"
+                },
+                "nitrox": {
+                    "type": "object",
+                    "properties": {
+                        "path": {
+                            "type": "string"
+                        },
+                        "typescript": {
+                            "enum": [
+                                "strict",
+                                "strictest",
+                                "relaxed"
+                            ]
+                        },
+                        "runInstall": {
+                            "type": "boolean"
+                        },
+                        "initGit": {
+                            "type": "boolean"
+                        },
+                        "integrations": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "additionalProperties": false
+        },
+        "turboOverrides": {
+            "type": "object",
+            "properties": {
+                "apps": {
                     "type": "array",
                     "items": {
-                        "type": "string"
+                        "enum": ["web", "docs"]
+                    }
+                },
+                "web": {
+                    "type": "object",
+                    "properties": {
+                        "nitrox": {
+                            "type": "boolean"
+                        }
+                    }
+                },
+                "docs": {
+                    "type": "object",
+                    "properties": {
+                        "nitrox": {
+                            "type": "boolean"
+                        }
                     }
                 }
-            },
-            "required": [
-                "enable"
-            ],
-            "if": {
-                "properties": {
-                    "enable": {
-                        "const": true
-                    }
-                }
-            },
-            "then": {
-                "required": [
-                    "path",
-                    "typescript",
-                    "runInstall",
-                    "initGit",
-                    "integrations"
-                ]
             }
         }
     },
     "required": [
         "description",
         "packageManager",
-        "packageSet",
-        "turbo",
-        "nitrox"
+        "services"
     ]
 }
