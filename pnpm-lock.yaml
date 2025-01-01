@@ -29,6 +29,12 @@ importers:
       gradient-string:
         specifier: ^2.0.2
         version: 2.0.2
+      zod:
+        specifier: 3.24.1
+        version: 3.24.1
+      zod-to-json-schema:
+        specifier: 3.24.1
+        version: 3.24.1(zod@3.24.1)
     devDependencies:
       '@types/gradient-string':
         specifier: ^1.1.6
@@ -870,6 +876,14 @@ packages:
     resolution: {integrity: sha512-GQHQqAopRhwU8Kt1DDM8NjibDXHC8eoh1erhGAJPEyveY9qqVeXvVikNKrDz69sHowPMorbPUrH/mx8c50eiBQ==}
     engines: {node: '>=18'}
 
+  zod-to-json-schema@3.24.1:
+    resolution: {integrity: sha512-3h08nf3Vw3Wl3PK+q3ow/lIil81IT2Oa7YpQyUUDsEWbXveMesdfK1xBd2RhCkynwZndAxixji/7SYJJowr62w==}
+    peerDependencies:
+      zod: ^3.24.1
+
+  zod@3.24.1:
+    resolution: {integrity: sha512-muH7gBL9sI1nciMZV67X5fTKKBLtwpZ5VBp1vsOQzj1MhrBZ4wlVCm3gedKZWLp0Oyel8sIGfeiz54Su+OVT+A==}
+
 snapshots:
 
   '@antfu/ni@0.23.2': {}
@@ -1573,3 +1587,9 @@ snapshots:
   yaml@2.4.2: {}
 
   yoctocolors@2.1.1: {}
+
+  zod-to-json-schema@3.24.1(zod@3.24.1):
+    dependencies:
+      zod: 3.24.1
+
+  zod@3.24.1: {}
