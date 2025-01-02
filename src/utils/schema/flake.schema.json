@@ -92,11 +92,6 @@
                     "additionalProperties": false
                 }
             },
-            "required": [
-                "packageSet",
-                "turboPath",
-                "nitrox"
-            ],
             "additionalProperties": false
         },
         "turboOverrides": {
@@ -133,11 +128,6 @@
                     "additionalProperties": false
                 }
             },
-            "required": [
-                "apps",
-                "web",
-                "docs"
-            ],
             "additionalProperties": false
         }
     },
@@ -146,8 +136,5 @@
         "packageManager",
         "services"
     ],
-    "additionalProperties": {
-        "type": "string"
-    },
     "$schema": "http://json-schema.org/draft-07/schema#"
 }
