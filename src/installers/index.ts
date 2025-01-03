@@ -1,3 +1,4 @@
+import { z } from "zod";
 import { PackageManager } from "~/utils/getPackageManager";
 
 export const packages = {
@@ -33,25 +34,77 @@ export interface cliResults {
     packages: Packages[],
 }
 
-export interface Flake {
-    description: string
-    packageManager: PackageManager
-    packageSet: {
-        value: "std" | "slim" | "sslim" | "custom" 
-        packages?: Packages[] 
-    }        
-    turbo: {
-        enable: boolean
-        path?: string
-    }
-    nitrox: NitroxConfig
-}
+export type Flake = z.infer<typeof flakeSchema>
+type Services = z.infer<typeof servicesSchema>
+type Options = z.infer<typeof optionsSchema>
 
-type NitroxConfig = {
-    enable: boolean
-    path?: string
-    typescript?: "strict" | "strictest" | "relaxed"
-    runInstall?: boolean
-    initGit?: boolean
-    integrations?: string[]
+const nitroxConfigSchema = z.object({
+    path: z.string(),
+    typescript: z
+        .union([z.literal("strict"), z.literal("strictest"), z.literal("relaxed")]),
+    runInstall: z.boolean(),
+    initGit: z.boolean(),
+    integrations: z.array(z.string()).optional()
+})
+
+const packageManagerSchema = z.union([
+    z.literal("npm"),
+    z.literal("pnpm"),
+    z.literal("yarn"),
+    z.literal("bun"),
+    z.literal("deno")
+])
+
+const servicesSchema = z.object({
+    packageSet: z.boolean().optional(),
+    turbo: z.boolean().optional(),
+    nitrox: z.boolean().optional(),
+    shadcn: z.boolean().optional()
+})
+
+const optionsSchema = z.object({
+    packageSet: z.object({
+        value: z.union([
+            z.literal("std"),
+            z.literal("slim"),
+            z.literal("sslim"),
+            z.literal("custom")
+        ]),
+        packages: z.array(z.string()).optional()
+    }).optional(),
+    turboPath: z.string().optional(),
+    nitrox: nitroxConfigSchema.optional()
+}).optional()
+
+export const flakeSchema = z.object({
+    "$schema": z.string(),
+    description: z.string(),
+    packageManager: packageManagerSchema,
+    services: servicesSchema,
+    options: optionsSchema,
+    turboOverrides: z
+        .object({
+            apps: z.array(z.string()).optional(),
+            web: z.object({
+                nitrox: z.boolean()
+            }).optional(),
+            docs: z.object({
+                starlight: z.boolean()
+            }).optional()
+        })
+        .optional()
+})
+
+export class FlakeConfig {
+    description: string;
+    packageManager: PackageManager
+    services: Services
+    options: Options
+
+    constructor(flake: Flake){
+        this.description = flake.description
+        this.packageManager = flake.packageManager
+        this.services = flake.services
+        this.options = flake.options
+    }
 }
