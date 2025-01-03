@@ -4,6 +4,8 @@ import { PackageManager } from "./getPackageManager.js";
 import { cancelPrompt } from "./prompts/cancel.js";
 import { exit } from "process";
 import { confirm, log, multiselect, select } from "@clack/prompts";
+import { turboGradient } from "./gradients.js";
+import gradient from "gradient-string";
 
 export const configPrompt = async (packageManager: PackageManager, flags: cliFlags) => {
     
@@ -25,14 +27,14 @@ export const configPrompt = async (packageManager: PackageManager, flags: cliFla
 
     if (!flags.nitrox) {
         const runNitrox = await confirm({
-            message: "Do you want to start the new Nitrox DevKit?",
+            message: `Do you want to start the new ${gradient.atlas("Nitrox DevKit?")}`,
         }) as boolean;
         cancelPrompt(runNitrox)
         config.nitrox = runNitrox;
     }
     if (!flags.turbo) {
         const runTurbo = await confirm({
-            message: "Do you want to start Turbo?",
+            message: `Do you want to start ${turboGradient("Turbo?")}`,
         }) as boolean;
         cancelPrompt(runTurbo)
         config.turbo = runTurbo;

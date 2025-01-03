@@ -1,14 +1,14 @@
 import { note } from "@clack/prompts";
 import { execa } from "execa";
-import gradient from "gradient-string";
 import { setTimeout } from "timers/promises";
 import { PackageManager } from "~/utils/getPackageManager.js";
+import { turboGradient } from "~/utils/gradients";
 import { turboConfig } from "~/utils/prompts/turboPrompt";
 
 export const turboPrompt = async (packageManager:PackageManager) => {
     await installTurboCommand(packageManager, true);
 
-    note(`Welcome to ${gradient.passion("Turbo")}. Let's get started.`, "Step 2.");
+    note(`Welcome to ${turboGradient("Turbo")}. Let's get started.`, "Step 2.");
     await setTimeout(1000);
 
     const turboPath = await turboConfig();
