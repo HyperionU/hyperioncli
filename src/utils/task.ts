@@ -1,4 +1,5 @@
 import { spinner } from "@clack/prompts";
+import { setTimeout } from "timers/promises";
 
 export type Task = {
 	/**
@@ -27,5 +28,6 @@ export const tasks = async (tasks: Task[]) => {
 		s.start(task.title);
 		const result = await task.task(s.message);
 		s.stop(result || task.title);
+		await setTimeout(1000)
 	}
 };
