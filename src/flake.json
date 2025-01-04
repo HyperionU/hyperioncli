@@ -1,5 +1,5 @@
 {
-    "$schema": "https://raw.githubusercontent.com/HyperionU/hyperioncli/refs/heads/exp-Flake/src/utils/schema/flake.schema.json",
+    "$schema": "https://raw.githubusercontent.com/HyperionU/hyperioncli/refs/heads/exp-Flake/src/utils/schema/flake.json",
     "description": "Example flake",
     "packageManager": "pnpm",
     "services": {
