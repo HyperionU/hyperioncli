@@ -1,3 +1,6 @@
+import { z } from "zod";
+import { PackageManager } from "~/utils/getPackageManager";
+
 export const packages = {
     /* Theme */
     "vsIcons": "vscode-icons-team.vscode-icons",
@@ -29,4 +32,88 @@ export interface cliFlags {
 export interface cliResults {
     flags: cliFlags,
     packages: Packages[],
+}
+
+export type Flake = z.infer<typeof flakeSchema>
+type Services = z.infer<typeof servicesSchema>
+type Options = z.infer<typeof optionsSchema>
+type Overrides = z.infer<typeof overridesSchema>
+
+const nitroxConfigSchema = z.object({
+    path: z.string(),
+    typescript: z
+        .union([z.literal("strict"), z.literal("strictest"), z.literal("relaxed")]),
+    runInstall: z.boolean(),
+    initGit: z.boolean(),
+    integrations: z.array(z.string()).optional()
+})
+
+const packageManagerSchema = z.union([
+    z.literal("npm"),
+    z.literal("pnpm"),
+    z.literal("yarn"),
+    z.literal("bun"),
+    z.literal("deno")
+])
+
+const servicesSchema = z.object({
+    packageSet: z.boolean().optional(),
+    turbo: z.boolean().optional(),
+    nitrox: z.boolean().optional(),
+    shadcn: z.boolean().optional()
+})
+
+const optionsSchema = z.object({
+    packageSet: z.object({
+        value: z.union([
+            z.literal("std"),
+            z.literal("slim"),
+            z.literal("sslim"),
+            z.literal("custom")
+        ]),
+        packages: z.array(z.string()).optional()
+    }).optional(),
+    turboPath: z.string().optional(),
+    nitrox: nitroxConfigSchema.optional()
+}).optional()
+
+const overridesSchema = z
+.object({
+    enable: z.boolean(),
+    apps: z.array(z.union([
+        z.literal("web"),
+        z.literal("docs")
+    ])).optional(),
+    web: z.object({
+        nitrox: z.boolean()
+    }).optional(),
+    docs: z.object({
+        starlight: z.boolean()
+    }).optional()
+})
+.optional()
+
+export const flakeSchema = z.object({
+    "$schema": z.string(),
+    description: z.string(),
+    packageManager: packageManagerSchema,
+    services: servicesSchema,
+    options: optionsSchema,
+    turboOverrides: overridesSchema
+})
+
+export class FlakeConfig {
+    description: string;
+    packageManager: PackageManager
+    services: Services
+    options: Options
+    overrides: Overrides
+
+    constructor(flake: Flake){
+        this.description = flake.description
+        this.packageManager = flake.packageManager
+        this.services = flake.services
+        this.options = flake.options
+        this.overrides = flake.turboOverrides
+    }
 }

@@ -25,7 +25,7 @@ export const init = new Command()
     .action(
         async (opts: cliFlags) => {
             const flags = opts;
-            const packageManager = getUserPkgManager();
+            const packageManager = await getUserPkgManager();
             await runCLI(packageManager, flags)
         }   
     )

@@ -14,7 +14,7 @@ export const nitrox = new Command()
     .description("Initialise and scaffold a new Nitrox project")
     .action(
         async () => {
-            const packageManager = getUserPkgManager()
+            const packageManager = await getUserPkgManager()
             await nitroxCLI(packageManager)
         }
     )
@@ -30,7 +30,7 @@ const nitroxCLI = async (packageManager:PackageManager) => {
     note("Now, let's add some integrations.", "Step 2.")
     await setTimeout(1000)
     const integrations = await nitroxIntegrationConfig()
+    await runNitroxInit(packageManager, config, integrations, true)
 
-    await runNitroxInit(packageManager, config, integrations)
     await outro()
 }

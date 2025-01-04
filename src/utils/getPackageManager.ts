@@ -1,14 +1,20 @@
-export type PackageManager = "npm" | "pnpm" | "yarn" | "bun";
+import { detect } from "@antfu/ni";
 
-export const getUserPkgManager: () => PackageManager = () => {
-    // This environment variable is set by npm and yarn but pnpm seems less consistent
-    const userAgent = process.env.npm_config_user_agent;
+export type PackageManager = "npm" | "pnpm" | "yarn" | "bun" | "deno";
 
-    if (!userAgent) {
-        return "npm";
-    }
+export const getUserPkgManager: () => Promise<PackageManager> = async () => {
     
-    return userAgent.startsWith("yarn") ? "yarn" : 
-        userAgent.startsWith("pnpm") ? "pnpm" :
-        userAgent.startsWith("bun") ? "bun" : "npm";
+    const packageManager = await detect({programmatic: true});
+
+    switch (packageManager) {
+        case "yarn@berry":
+            return "yarn"
+        case "pnpm@6":
+            return "pnpm"
+        case "bun":
+            return "bun"      
+        default:
+            return packageManager ?? "npm"
+    }
+
 };
