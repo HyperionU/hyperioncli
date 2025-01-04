@@ -35,6 +35,7 @@ export const runCLI = async (packageManager: PackageManager, flags: cliFlags): P
     }
 
     await intro();
+
     note("Let's get you configured.", gradient.atlas("Step 1."))
 
     const config = await configPrompt(packageManager, cliResults.flags)

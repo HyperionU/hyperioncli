@@ -9,10 +9,10 @@ export const turboPrompt = async (packageManager:PackageManager) => {
     await installTurboCommand(packageManager, true);
 
     note(`Welcome to ${turboGradient("Turbo")}. Let's get started.`, "Step 2.");
+
     await setTimeout(1000);
 
     const turboPath = await turboConfig();
-
     await initTurborepo(packageManager, turboPath, true);
 }
 

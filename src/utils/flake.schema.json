@@ -1,0 +1,120 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Schema for hyperioncli Flake",
+    "type": "object",
+    "properties": {
+        "description": {
+            "type": "string"
+        },
+        "packageManager": {
+            "enum": [
+                "npm",
+                "pnpm",
+                "yarn"
+            ]
+        },
+        "packageSet": {
+            "type": "object",
+            "properties": {
+                "value": {
+                    "enum": ["std", "slim", "sslim", "custom" ]
+                },
+                "packages": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            },
+            "if": {
+                "properties": {
+                    "value": {"const": "custom"}
+                }
+            },
+            "then": {
+                "required": ["packages"]
+            },
+            "required": [
+                "value"
+            ]
+        },
+        "turbo": {
+            "type": "object",
+            "properties": {
+                "enable": {
+                    "type": "boolean",
+                    "default": false
+                },
+                "path": {
+                    "type": "string"
+                }
+            },
+            "if": {
+                "properties": {
+                    "enable": {
+                        "const": true
+                    }
+                }
+            },
+            "then": {
+                "required": [
+                    "path"
+                ]
+            }
+        },
+        "nitrox": {
+            "type": "object",
+            "properties": {
+                "enable": {
+                    "type": "boolean",
+                    "default": false
+                },
+                "path": {
+                    "type": "string"
+                },
+                "typescript": {
+                    "enum": [
+                        "strict",
+                        "strictest",
+                        "relaxed"
+                    ]
+                },
+                "runInstall": {
+                    "type": "boolean"
+                },
+                "initGit": {
+                    "type": "boolean"
+                },
+                "integrations": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            },
+            "if": {
+                "properties": {
+                    "enable": {
+                        "const": true
+                    }
+                }
+            },
+            "then": {
+                "required": [
+                    "path",
+                    "typescript",
+                    "runInstall",
+                    "initGit",
+                    "integrations"
+                ]
+            }
+        }
+    },
+    "required": [
+        "description",
+        "packageManager",
+        "packageSet",
+        "turbo",
+        "nitrox"
+    ]
+}

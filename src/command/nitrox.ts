@@ -30,7 +30,7 @@ const nitroxCLI = async (packageManager:PackageManager) => {
     note("Now, let's add some integrations.", "Step 2.")
     await setTimeout(1000)
     const integrations = await nitroxIntegrationConfig()
-
     await runNitroxInit(packageManager, config, integrations, true)
+
     await outro()
 }

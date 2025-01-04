@@ -18,7 +18,6 @@ export const nitroxPrompt = async (packageManager: PackageManager, flags: cliFla
     await setTimeout(1000)
 
     const integrations = await nitroxIntegrationConfig()
-
     await runNitroxInit(packageManager, config, integrations, true);
 }
 

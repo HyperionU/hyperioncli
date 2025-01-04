@@ -26,7 +26,7 @@ const turboCLI = async (packageManager:PackageManager) => {
     await setTimeout(1000);
 
     const turboPath = await turboConfig();
-
     await initTurborepo(packageManager, turboPath, true);
+
     await outro()
 }
