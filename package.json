@@ -17,7 +17,10 @@
     "clean:turbo": "rm -rf dist && pnpm remove -g turbo",
     "quickbuild": "tsc && tsup"
   },
-  "repository": "github:HyperionU/hyperioncli",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HyperionU/hyperioncli.git"
+  },
   "keywords": [
     "cli",
     "configure"
