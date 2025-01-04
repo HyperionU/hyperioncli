@@ -9,7 +9,7 @@ import { outro } from "~/utils/prompts/outro";
 import { turboConfig } from "~/utils/prompts/turboPrompt";
 
 export const turbo = new Command()
-    .name(`${turboGradient("turbo")}`)
+    .name("turbo")
     .description(`initialize and scaffold new ${turboGradient("Turborepo")}`)
     .option("-p, --path <path>", `Path to new ${turboGradient("Turborepo")}`)
     .action(async (option) => {
