@@ -2,6 +2,7 @@ import Ajv from "ajv";
 import { writeFileSync } from "fs";
 import zodToJsonSchema from "zod-to-json-schema";
 import { Flake, flakeSchema } from "~/installers";
+import { getUserPkgManager } from "./getPackageManager";
 
 const ajv = new Ajv()
 
@@ -24,6 +25,27 @@ export function generateFlakeSchema(fileName: string) {
         JSON.stringify(zodToJsonSchema(flakeSchema)),
         {
             "encoding": "utf-8"
+        }
+    )
+}
+
+const flakeDefault: Flake = {
+    $schema: "https://raw.githubusercontent.com/HyperionU/hyperioncli/refs/heads/exp-Flake/src/utils/schema/flake.schema.json",
+    description: "Example hyperioncli flake",
+    packageManager: await getUserPkgManager(),
+    services: {
+        packageSet: false,
+        turbo: false,
+        nitrox: false
+    }
+}
+
+export function initFlake(dir: string) {
+    writeFileSync(
+        `${dir}/flake.json`,
+        JSON.stringify(flakeDefault),
+        {
+            encoding: "utf-8"
         }
     )
 }
