@@ -54,7 +54,11 @@
     "turboOverrides": {
       "type": "object",
       "properties": {
-        "apps": { "type": "array", "items": { "type": "string" } },
+        "enable": { "type": "boolean" },
+        "apps": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["web", "docs"] }
+        },
         "web": {
           "type": "object",
           "properties": { "nitrox": { "type": "boolean" } },
@@ -67,6 +71,15 @@
           "required": ["starlight"],
           "additionalProperties": false
         }
+      },
+      "required": ["enable"],
+      "if": {
+        "properties": {
+            "enable": {"const": true}
+        }
+      },
+      "then": {
+        "required": ["apps"]
       },
       "additionalProperties": false
     }
