@@ -1,16 +1,32 @@
 {
-    "$schema": "https://raw.githubusercontent.com/HyperionU/hyperioncli/refs/heads/exp-Flake/src/utils/schema/flake.json",
+    "$schema": "https://raw.githubusercontent.com/HyperionU/hyperioncli/refs/heads/unstable/src/utils/schema/flake.json",
     "description": "Example flake",
     "packageManager": "pnpm",
     "services": {
         "packageSet": true,
-        "nitrox": false,
-        "turbo": false
+        "nitrox": true,
+        "turbo": true,
+        "shadcn": true
     },
     "options": {
         "packageSet": {
             "value": "custom",
             "packages": []
+        },
+        "turboPath": "./turbo",
+        "nitrox": {
+            "path": "./www",
+            "typescript": "strict",
+            "runInstall": true,
+            "initGit": false,
+            "integrations": ["react", "tailwind"]
+        }
+    },
+    "turboOverrides": {
+        "enable": true,
+        "apps": ["web"],
+        "web": {
+            "nitrox": true
         }
     }
 }

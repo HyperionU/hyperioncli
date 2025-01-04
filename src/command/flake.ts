@@ -1,10 +1,10 @@
-import { log } from "@clack/prompts";
+import { confirm, log, note } from "@clack/prompts";
 import chalk from "chalk";
 import { Command } from "commander";
 import { execa } from "execa";
 import { readFileSync } from "fs";
 import gradient from "gradient-string";
-import path from "path";
+import path, { resolve } from "path";
 import { cwd } from "process";
 import { setTimeout } from "timers/promises";
 import { runNitroxInit, runStarlightInit } from "~/cli/nitrox";
@@ -18,6 +18,8 @@ import { install } from "~/utils/prompts";
 import { intro } from "~/utils/prompts/intro";
 import { outro } from "~/utils/prompts/outro";
 import { tasks, Task } from "~/utils/task";
+import { shadCn } from "../utils/shadCn";
+import { cancelPrompt } from "~/utils/prompts/cancel";
 
 export const flake = new Command()
   .name("flake")
@@ -81,9 +83,8 @@ const flakeCLI = async (flake: Flake) => {
       async task() {
         try {
           let packages: Packages[] = [];
-          if (options?.packageSet?.value === undefined) {
+          if (options?.packageSet?.value === undefined)
             throw new Error("Package Set not defined.");
-          }
           if (options?.packageSet?.value === "custom") {
             packages = options.packageSet.packages as Packages[];
           }
@@ -128,18 +129,31 @@ const flakeCLI = async (flake: Flake) => {
           if (overrides.web === undefined && overrides.apps.includes("web"))
             throw new Error("Web override not defined.");
           if (overrides.web?.nitrox) {
-            const nitroxRoute = path.resolve(cwd(), options?.turboPath, "apps/web");
-            nitrox.route = path.resolve(cwd(), options.turboPath, "apps", nitrox.route)
-            execa`rm -rf ${nitroxRoute}`
-            await runNitroxInit(packageManager, nitrox, integrations, false)
+            const nitroxRoute = path.resolve(
+              cwd(),
+              options?.turboPath,
+              "apps/web"
+            );
+            nitrox.route = path.resolve(
+              cwd(),
+              options.turboPath,
+              "apps",
+              nitrox.route
+            );
+            execa`rm -rf ${nitroxRoute}`;
+            await runNitroxInit(packageManager, nitrox, integrations, false);
           }
           if (overrides.docs === undefined && overrides.apps.includes("docs"))
             throw new Error("Docs override not defined.");
           if (overrides.docs?.starlight) {
-            const starlightRoute = path.resolve(cwd(), options.turboPath, "apps/docs")
-            nitrox.route = starlightRoute
-            execa`rm -rf ${starlightRoute}`
-            await runStarlightInit(packageManager, nitrox, integrations, false)
+            const starlightRoute = path.resolve(
+              cwd(),
+              options.turboPath,
+              "apps/docs"
+            );
+            nitrox.route = starlightRoute;
+            execa`rm -rf ${starlightRoute}`;
+            await runStarlightInit(packageManager, nitrox, integrations, false);
           }
           return `${turboGradient("Turbo")} overrides complete.`;
         } catch (error) {
@@ -165,10 +179,56 @@ const flakeCLI = async (flake: Flake) => {
     },
   ];
 
+  const shadcn: Task[] = [{
+    title: `Initialising shadcn/ui`,
+    async task() {
+      try {
+        if (nitrox.route === undefined)
+          throw new Error("Nitrox Route undefined!");
+        let path;
+        if (options?.turboPath === undefined)
+          path = resolve(cwd(), nitrox.route);
+        else path = resolve(cwd(), options?.turboPath, nitrox.route);
+        await shadCn(packageManager, path);
+        return `shadcn/ui Initialised.`;
+      } catch (error) {
+        return `${chalk.bgRed(error)}`;
+      }
+    },
+    enabled: (services.shadcn ?? false) && (services.nitrox ?? false),
+  }]
+
   log.message("Flake Detected! Using flake settings.", {
     symbol: chalk.cyan("~"),
   });
   await setTimeout(1000);
 
   await tasks(flakeTasks);
+
+  if (services.shadcn) await initShadCn(shadcn)
+  
+
 };
+
+const initShadCn = async (task: Task[]) => {
+  await setTimeout(1000)
+
+  log.message(`shadcn/ui requires some updates.`, {
+    symbol: chalk.blue("!")
+  })
+
+  note(`
+    - styles/global.css
+    - tsconfig.json
+    - Astro Config (tailwind)
+    - index.astro (req. styles imports)
+  `, "Files requiring updates:")
+
+  const runShadCn = await confirm({
+    message: "Are you ready to run?"
+  });  
+
+  cancelPrompt(runShadCn),
+
+  await tasks(task)
+}
