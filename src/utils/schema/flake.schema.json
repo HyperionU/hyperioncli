@@ -47,7 +47,8 @@
           },
           "required": ["path", "typescript", "runInstall", "initGit"],
           "additionalProperties": false
-        }
+        },
+        "components": { "type": "array", "items": { "type": "string" } }
       },
       "additionalProperties": false
     },
