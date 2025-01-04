@@ -37,6 +37,7 @@ export interface cliResults {
 export type Flake = z.infer<typeof flakeSchema>
 type Services = z.infer<typeof servicesSchema>
 type Options = z.infer<typeof optionsSchema>
+type Overrides = z.infer<typeof overridesSchema>
 
 const nitroxConfigSchema = z.object({
     path: z.string(),
@@ -76,23 +77,29 @@ const optionsSchema = z.object({
     nitrox: nitroxConfigSchema.optional()
 }).optional()
 
+const overridesSchema = z
+.object({
+    enable: z.boolean(),
+    apps: z.array(z.union([
+        z.literal("web"),
+        z.literal("docs")
+    ])).optional(),
+    web: z.object({
+        nitrox: z.boolean()
+    }).optional(),
+    docs: z.object({
+        starlight: z.boolean()
+    }).optional()
+})
+.optional()
+
 export const flakeSchema = z.object({
     "$schema": z.string(),
     description: z.string(),
     packageManager: packageManagerSchema,
     services: servicesSchema,
     options: optionsSchema,
-    turboOverrides: z
-        .object({
-            apps: z.array(z.string()).optional(),
-            web: z.object({
-                nitrox: z.boolean()
-            }).optional(),
-            docs: z.object({
-                starlight: z.boolean()
-            }).optional()
-        })
-        .optional()
+    turboOverrides: overridesSchema
 })
 
 export class FlakeConfig {
@@ -100,11 +107,13 @@ export class FlakeConfig {
     packageManager: PackageManager
     services: Services
     options: Options
+    overrides: Overrides
 
     constructor(flake: Flake){
         this.description = flake.description
         this.packageManager = flake.packageManager
         this.services = flake.services
         this.options = flake.options
+        this.overrides = flake.turboOverrides
     }
 }

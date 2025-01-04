@@ -1,16 +1,18 @@
 import { log } from "@clack/prompts";
 import chalk from "chalk";
 import { Command } from "commander";
+import { execa } from "execa";
 import { readFileSync } from "fs";
 import gradient from "gradient-string";
 import path from "path";
+import { cwd } from "process";
 import { setTimeout } from "timers/promises";
-import { runNitroxInit } from "~/cli/nitrox";
+import { runNitroxInit, runStarlightInit } from "~/cli/nitrox";
 import { initTurborepo } from "~/cli/turbo";
 import { Flake, FlakeConfig } from "~/installers";
 import { Packages } from "~/installers";
 import { installPackages } from "~/installers/installPackage";
-import { flakeValidate, initFlake } from "~/utils/flake";
+import { flakeValidate, generateFlakeSchema, initFlake } from "~/utils/flake";
 import { turboGradient } from "~/utils/gradients";
 import { install } from "~/utils/prompts";
 import { intro } from "~/utils/prompts/intro";
@@ -34,10 +36,18 @@ export const flake = new Command()
 flake
   .command("init")
   .description("Initalise new Flake")
-  .argument("[dir]", "Directory to new flake", process.cwd())
+  .argument("[dir]", "Directory to new flake", cwd())
   .action((dir) => {
     const flakeDir = path.resolve(dir);
     initFlake(flakeDir);
+  });
+
+flake
+  .command("gen")
+  .description("Generate new flake schema")
+  .argument("[file]", "File name for schema", "flake.schema")
+  .action((file) => {
+    generateFlakeSchema(file);
   });
 
 const parseFlake = async (flakeFile: any) => {
@@ -63,6 +73,7 @@ const flakeCLI = async (flake: Flake) => {
     initGit: options?.nitrox?.initGit ?? false,
   };
   const integrations = options?.nitrox?.integrations ?? [];
+  const overrides = flakeConfig.overrides;
 
   const flakeTasks: Task[] = [
     {
@@ -93,11 +104,49 @@ const flakeCLI = async (flake: Flake) => {
     {
       title: `Initializing ${turboGradient("Turbo")}`,
       async task() {
-        if (options?.turboPath === undefined) return "Initalization Skipped.";
-        await initTurborepo(packageManager, options?.turboPath, false);
-        return `${turboGradient("Turbo")} initialized!`;
+        try {
+          if (options?.turboPath === undefined)
+            throw new Error("Turbo Path not defined.");
+          await initTurborepo(packageManager, options?.turboPath, false);
+          return `${turboGradient("Turbo")} initialized!`;
+        } catch (error) {
+          return `${chalk.bgRed(error)}`;
+        }
       },
       enabled: services.turbo ?? false,
+    },
+    {
+      title: `Overriding ${turboGradient("Turbo")} apps`,
+      async task() {
+        try {
+          /* Top level: turboPath & Overrides defined? */
+          if (options?.turboPath === undefined)
+            throw new Error("Turbo Path not defined.");
+          if (overrides?.apps === undefined)
+            throw new Error("Apps override not defined.");
+          /* Web level: Web defined? */
+          if (overrides.web === undefined && overrides.apps.includes("web"))
+            throw new Error("Web override not defined.");
+          if (overrides.web?.nitrox) {
+            const nitroxRoute = path.resolve(cwd(), options?.turboPath, "apps/web");
+            nitrox.route = path.resolve(cwd(), options.turboPath, "apps", nitrox.route)
+            execa`rm -rf ${nitroxRoute}`
+            await runNitroxInit(packageManager, nitrox, integrations, false)
+          }
+          if (overrides.docs === undefined && overrides.apps.includes("docs"))
+            throw new Error("Docs override not defined.");
+          if (overrides.docs?.starlight) {
+            const starlightRoute = path.resolve(cwd(), options.turboPath, "apps/docs")
+            nitrox.route = starlightRoute
+            execa`rm -rf ${starlightRoute}`
+            await runStarlightInit(packageManager, nitrox, integrations, false)
+          }
+          return `${turboGradient("Turbo")} overrides complete.`;
+        } catch (error) {
+          return `${chalk.bgRed(error)}`;
+        }
+      },
+      enabled: overrides?.enable ?? false,
     },
     {
       title: `Initializing ${gradient.atlas("Nitrox")}`,
@@ -112,7 +161,7 @@ const flakeCLI = async (flake: Flake) => {
           return `${chalk.bgRed(error)}`;
         }
       },
-      enabled: services.nitrox ?? false,
+      enabled: (services.nitrox ?? false) && overrides?.enable === false,
     },
   ];
 
