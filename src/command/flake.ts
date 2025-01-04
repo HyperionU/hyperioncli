@@ -3,13 +3,14 @@ import chalk from "chalk";
 import { Command } from "commander";
 import { readFileSync } from "fs";
 import gradient from "gradient-string";
+import path from "path";
 import { setTimeout } from "timers/promises";
 import { runNitroxInit } from "~/cli/nitrox";
 import { initTurborepo } from "~/cli/turbo";
 import { Flake, FlakeConfig } from "~/installers";
 import { Packages } from "~/installers";
 import { installPackages } from "~/installers/installPackage";
-import { flakeValidate, generateFlakeSchema } from "~/utils/flake";
+import { flakeValidate, initFlake } from "~/utils/flake";
 import { turboGradient } from "~/utils/gradients";
 import { install } from "~/utils/prompts";
 import { intro } from "~/utils/prompts/intro";
@@ -19,20 +20,24 @@ import { tasks, Task } from "~/utils/task";
 export const flake = new Command()
   .name("flake")
   .description("Initialise new Flake or scaffold new project with Flake")
-  .argument("[flake-file]")
-  .option("-i, --init")
-  .option("-g, --gen", "generate flake schema")
-  .action(async (flake, opts) => {
-    if (opts.init) {
-    }
-    if (opts.gen) {
-      generateFlakeSchema("flake.schema");
-    }
-    if (flake !== undefined) {
+  .argument("<flake-file>")
+  .action(async (flake) => {
+    try {
       await intro();
       await parseFlake(flake);
       await outro();
+    } catch (error) {
+      console.error(chalk.bgRed(error));
     }
+  });
+
+flake
+  .command("init")
+  .description("Initalise new Flake")
+  .argument("[dir]", "Directory to new flake", process.cwd())
+  .action((dir) => {
+    const flakeDir = path.resolve(dir);
+    initFlake(flakeDir);
   });
 
 const parseFlake = async (flakeFile: any) => {
@@ -111,8 +116,10 @@ const flakeCLI = async (flake: Flake) => {
     },
   ];
 
-  log.message("Flake Detected! Using flake settings.", {symbol: chalk.cyan("~")})
-  await setTimeout(1000)
+  log.message("Flake Detected! Using flake settings.", {
+    symbol: chalk.cyan("~"),
+  });
+  await setTimeout(1000);
 
   await tasks(flakeTasks);
 };
