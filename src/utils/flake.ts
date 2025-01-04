@@ -30,7 +30,7 @@ export function generateFlakeSchema(fileName: string) {
 }
 
 const flakeDefault: Flake = {
-    $schema: "https://raw.githubusercontent.com/HyperionU/hyperioncli/refs/heads/exp-Flake/src/utils/schema/flake.json",
+    $schema: "https://raw.githubusercontent.com/HyperionU/hyperioncli/refs/heads/unstable/src/utils/schema/flake.schema.json",
     description: "Example hyperioncli flake",
     packageManager: await getUserPkgManager(),
     services: {
