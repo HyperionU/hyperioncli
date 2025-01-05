@@ -151,7 +151,6 @@ const flakeCLI = async (flake: Flake) => {
               options.turboPath,
               "apps/docs"
             );
-            nitrox.route = starlightRoute;
             execa`rm -rf ${starlightRoute}`;
             await runStarlightInit(packageManager, nitrox, integrations, false);
           }
