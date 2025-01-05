@@ -24,9 +24,12 @@
     },
     "turboOverrides": {
         "enable": true,
-        "apps": ["web"],
+        "apps": ["web", "docs"],
         "web": {
             "nitrox": true
+        },
+        "docs": {
+            "starlight": true
         }
     }
 }
