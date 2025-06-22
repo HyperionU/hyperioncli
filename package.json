@@ -6,7 +6,7 @@
   "bin": "./dist/index.js",
   "scripts": {
     "typecheck": "tsc",
-    "build": "tsup",
+    "build": "tsdown",
     "start": "node dist/index.js",
     "start:help": "node dist/index.js -h",
     "start:version": "node dist/index.js -V",
@@ -15,7 +15,7 @@
     "start:init": "node dist/index.js init",
     "clean": "rm -rf dist",
     "clean:turbo": "rm -rf dist && pnpm remove -g turbo",
-    "quickbuild": "tsc && tsup"
+    "quickbuild": "tsc && tsdown"
   },
   "repository": {
     "type": "git",
@@ -31,7 +31,6 @@
     "@types/gradient-string": "^1.1.6",
     "@types/node": "^20.12.11",
     "tsdown": "^0.12.8",
-    "tsup": "^8.0.2",
     "type-fest": "^4.18.2",
     "typescript": "^5.4.5"
   },

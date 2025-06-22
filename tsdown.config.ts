@@ -1,4 +1,4 @@
-import { defineConfig } from "tsup";
+import { defineConfig } from "tsdown";
 
 const isDev = process.env.npm_lifecycle_event === "dev";
 
